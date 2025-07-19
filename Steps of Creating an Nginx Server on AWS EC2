@@ -1,0 +1,101 @@
+🚀 Setting Up Your AWS EC2 Instance
+This phase focuses on provisioning and preparing your virtual server in the cloud.
+
+Step 1: Launch an EC2 Instance
+Log in to AWS Management Console: Access the EC2 Dashboard.
+
+Choose AMI: Select an Amazon Machine Image (e.g., Ubuntu Server 22.04 LTS or Amazon Linux 2023).
+
+Select Instance Type: Opt for a free-tier eligible instance like t2.micro for testing.
+
+Create/Select Key Pair: Generate a new .pem file for SSH access and save it securely.
+
+Configure Network Settings (Security Group):
+
+Add Inbound Rule for SSH (Port 22): Restrict source to "My IP" for security.
+
+Add Inbound Rule for HTTP (Port 80): Set source to 0.0.0.0/0 (Anywhere) for web access.
+
+(Optional) Add Inbound Rule for HTTPS (Port 443): Set source to 0.0.0.0/0 for secure web access.
+
+(Optional) Add User Data: Include a shell script to automate NGINX installation upon launch.
+
+Launch Instance: Review and confirm.
+
+Step 2: Connect to Your EC2 Instance
+Open Terminal/SSH Client: Use your local machine's terminal (Linux/macOS) or Git Bash/WSL (Windows).
+
+Set Key Permissions: Navigate to your .pem file directory and run chmod 400 your-key-pair-name.pem.
+
+Connect via SSH: Use the command:
+
+For Ubuntu: ssh -i your-key-pair-name.pem ubuntu@your-ec2-public-ip
+
+For Amazon Linux: ssh -i your-key-pair-name.pem ec2-user@your-ec2-public-ip
+
+Confirm Connection: You should see the terminal prompt change to the EC2 instance's hostname.
+
+Step 3: Install and Configure NGINX (If not done by User Data)
+Update Package Lists:
+
+Ubuntu: sudo apt update -y
+
+Amazon Linux: sudo yum update -y
+
+Install NGINX:
+
+Ubuntu: sudo apt install nginx -y
+
+Amazon Linux: sudo yum install nginx -y
+
+Start NGINX Service: sudo systemctl start nginx
+
+Enable NGINX on Boot: sudo systemctl enable nginx
+
+Verify NGINX: Open your browser and navigate to your EC2 instance's Public IPv4 address. You should see the default NGINX welcome page.
+
+Place Web Content: Navigate to the NGINX web root directory (/var/www/html/ on Ubuntu, /usr/share/nginx/html/ on Amazon Linux) and place your index.html or other web files.
+
+🐙 Integrating with GitHub
+This phase focuses on version controlling your web project and syncing it with GitHub.
+
+Step 4: Create a GitHub Repository
+Log in to GitHub: Go to github.com.
+
+Create New Repository: Click the "+" icon (top-right) and select "New repository."
+
+Name Repository: Provide a meaningful name (e.g., my-nginx-website).
+
+Choose Visibility: Select "Public" or "Private."
+
+Skip Initialization: Do not check "Add a README file," ".gitignore," or "Choose a license" for this workflow, as you'll push existing content.
+
+Create Repository: Click "Create repository."
+
+Step 5: Configure Git on EC2 and Push to GitHub
+Install Git on EC2:
+
+Ubuntu: sudo apt install git -y
+
+Amazon Linux: sudo yum install git -y
+
+Configure Git User:
+
+git config --global user.name "Your Name"
+
+git config --global user.email "your.email@example.com"
+
+Navigate to Web Root: cd /var/www/html/ (or /usr/share/nginx/html/).
+
+Initialize Git Repository: sudo git init
+
+Add Files to Staging: sudo git add .
+
+Commit Changes: sudo git commit -m "Initial commit of web content"
+
+Add GitHub Remote: Copy the remote URL from your GitHub repository page (e.g., https://github.com/your-username/your-repo.git) and run:
+sudo git remote add origin https://github.com/your-username/your-repo.git
+
+Push to GitHub: sudo git push -u origin main
+
+You'll be prompted for your GitHub username and a Personal Access Token (PAT). Generate a PAT from GitHub's Developer Settings with repo scope.
